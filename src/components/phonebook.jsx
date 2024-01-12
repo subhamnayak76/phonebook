@@ -1,7 +1,7 @@
 // phonebook.jsx
 
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 
 const Filter = ({ filter, setfilter }) => {
   function filterhandler(event) {
@@ -10,14 +10,19 @@ const Filter = ({ filter, setfilter }) => {
 
   return (
     <div>
-      filter shown with{' '}
-      <input value={filter} onChange={filterhandler} />
+      filter shown with <input value={filter} onChange={filterhandler} />
     </div>
   );
 };
 
-
-const From = ({setNumber,number,setNewName,setPersons,persons,newName}) =>{
+const From = ({
+  setNumber,
+  number,
+  setNewName,
+  setPersons,
+  persons,
+  newName,
+}) => {
   function onnumberhandler(event) {
     setNumber(event.target.value);
   }
@@ -26,7 +31,7 @@ const From = ({setNumber,number,setNewName,setPersons,persons,newName}) =>{
   }
   function addNote(event) {
     event.preventDefault();
-  
+
     const isDuplicate = persons.some(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
@@ -34,63 +39,75 @@ const From = ({setNumber,number,setNewName,setPersons,persons,newName}) =>{
       alert(`${newName} is already added in the phonebook`);
     } else {
       const newPerson = {
-        id: persons.length + 1,
+        id: "persons.length + 1",
         name: newName,
         number: number,
       };
       axios
-        .post('http://localhost:3001/persons', newPerson)
+        .post("http://localhost:3001/persons", newPerson)
         .then((response) => {
           setPersons(persons.concat(response.data));
-          setNewName('');
+          setNewName("");
         });
     }
   }
   return (
     <>
       <form onSubmit={addNote}>
-      <div>
-        name:{' '}
-        <input
-          value={newName}
-          onChange={onchangehandler}
-        />
-      </div>
-      <div>
-        number:{' '}
-        <input
-          value={number}
-          onChange={onnumberhandler}
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
+        <div>
+          name: <input value={newName} onChange={onchangehandler} />
+        </div>
+        <div>
+          number: <input value={number} onChange={onnumberhandler} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
     </>
-  )
-}
+  );
+};
 
-const Getresult =({persons,filter})=>{
+const Getresult = ({ persons, filter ,setPersons}) => {
   const filteredPersons = persons.filter((person) =>
-  person.name.toLowerCase().includes(filter.toLowerCase())
-  )
-  return(
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  //     function deletehandler(id){
+  //       const deleted = persons.filter((x) => x.id === id)
+  //       const deletedobj = {...deleted}
+
+  //       axios.
+  //       delete(`http://localhost:3001/persons/${id}`,deletedobj)
+  //       .then(response =>{
+  //         console.log(response.data)
+  //       })
+  //     }
+  const deletehandler = (id) => {
+    if (window.confirm("Do you really want to delete")) {
+      axios
+      .delete(`http://localhost:3001/persons/${id}`)
+      .then((response) => {
+        setPersons(persons.concat(response.data))
+      })
+      
+      .catch((error) => {
+        console.error("Error deleting the person:", error);
+      });
+    }
+    
+    
+  };
+
+  return (
     <div>
-    {filteredPersons.map((x) => (
-      <p key={x.id}>
-        {x.name} {x.number}
-      </p>
-    ))}
+      {filteredPersons.map((x) => (
+        <p key={x.id}>
+          {x.name} {x.number}{" "}
+          <button onClick={() => deletehandler(x.id)}>delete</button>
+        </p>
+      ))}
     </div>
+  );
+};
 
-  )
-}
-
-
- 
-
- 
-
-export { Filter, From ,Getresult};
-
+export { Filter, From, Getresult };
