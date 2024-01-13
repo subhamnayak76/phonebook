@@ -39,14 +39,14 @@ const From = ({
       alert(`${newName} is already added in the phonebook`);
     } else {
       const newPerson = {
-        id: "persons.length + 1",
+        id: persons.length + 1,
         name: newName,
         number: number,
       };
       axios
         .post("http://localhost:3001/persons", newPerson)
         .then((response) => {
-          setPersons(persons.concat(response.data));
+          setPersons(persons.filter((person) => person.id !== id));
           setNewName("");
         });
     }
@@ -68,47 +68,26 @@ const From = ({
   );
 };
 
-const Getresult = ({ persons, filter ,setPersons}) => {
+const Getresult = ({ persons, filter, setPersons }) => {
   const filteredPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(filter.toLowerCase())
+    person.name && person.name.toLowerCase().includes(filter.toLowerCase())
   );
-  //     function deletehandler(id){
-  //       const deleted = persons.filter((x) => x.id === id)
-  //       const deletedobj = {...deleted}
-
-  //       axios.
-  //       delete(`http://localhost:3001/persons/${id}`,deletedobj)
-  //       .then(response =>{
-  //         console.log(response.data)
-  //       })
-  //     }
-  // const deletehandler = (id) => {
-  //   if (window.confirm("Do you really want to delete")) {
-  //     axios
-  //     .delete(`http://localhost:3001/persons/${id}`)
-  //     .then((response) => {
-  //       setPersons(persons.concat(response.data))
-  //     })
-      
-  //     .catch((error) => {
-  //       console.error("Error deleting the person:", error);
-  //     });
-  //   }
-    
+  
   const deletehandler = (id) => {
     if (window.confirm("Do you really want to delete")) {
       axios
-        .delete(`http://localhost:3001/persons/${id}`)
-        .then((response) => {
-          setPersons(persons.filter((person) => person.id !== id)); // Update the state by filtering out the deleted person
-        })
-        .catch((error) => {
-          console.error("Error deleting the person:", error);
-        });
+      .delete(`http://localhost:3001/persons/${id}`)
+      .then((response) => {
+        setPersons(persons.filter((person)=> person.id !== id))
+      })
+      
+      .catch((error) => {
+        console.error("Error deleting the person:", error);
+      });
     }
+    
+    
   };
-  
-  // };
 
   return (
     <div>
