@@ -82,21 +82,33 @@ const Getresult = ({ persons, filter ,setPersons}) => {
   //         console.log(response.data)
   //       })
   //     }
+  // const deletehandler = (id) => {
+  //   if (window.confirm("Do you really want to delete")) {
+  //     axios
+  //     .delete(`http://localhost:3001/persons/${id}`)
+  //     .then((response) => {
+  //       setPersons(persons.concat(response.data))
+  //     })
+      
+  //     .catch((error) => {
+  //       console.error("Error deleting the person:", error);
+  //     });
+  //   }
+    
   const deletehandler = (id) => {
     if (window.confirm("Do you really want to delete")) {
       axios
-      .delete(`http://localhost:3001/persons/${id}`)
-      .then((response) => {
-        setPersons(persons.concat(response.data))
-      })
-      
-      .catch((error) => {
-        console.error("Error deleting the person:", error);
-      });
+        .delete(`http://localhost:3001/persons/${id}`)
+        .then((response) => {
+          setPersons(persons.filter((person) => person.id !== id)); // Update the state by filtering out the deleted person
+        })
+        .catch((error) => {
+          console.error("Error deleting the person:", error);
+        });
     }
-    
-    
   };
+  
+  // };
 
   return (
     <div>
