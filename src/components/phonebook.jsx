@@ -36,7 +36,21 @@ const From = ({
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
     if (isDuplicate) {
-      alert(`${newName} is already added in the phonebook`);
+      const existing = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())
+      const updatenumber = {...existing ,number : number}
+      if (window.confirm(`${newName} is already added to phonebook ,replace the old number with the new one ?`)){
+        axios
+        .put(`http://localhost:3001/persons/${updatenumber.id}`,updatenumber)
+        .then((response) =>{
+          setPersons(persons.map((person) => person.id !== updatenumber.id ? person : response.data))
+          setNumber("")
+          setNewName("")
+        })
+
+      }
+
+
+
     } else {
       const newPerson = {
         id: persons.length + 1,
@@ -69,24 +83,23 @@ const From = ({
 };
 
 const Getresult = ({ persons, filter, setPersons }) => {
-  const filteredPersons = persons.filter((person) =>
-    person.name && person.name.toLowerCase().includes(filter.toLowerCase())
+  const filteredPersons = persons.filter(
+    (person) =>
+      person.name && person.name.toLowerCase().includes(filter.toLowerCase())
   );
-  
+
   const deletehandler = (id) => {
     if (window.confirm("Do you really want to delete")) {
       axios
-      .delete(`http://localhost:3001/persons/${id}`)
-      .then((response) => {
-        setPersons(persons.filter((person)=> person.id !== id))
-      })
-      
-      .catch((error) => {
-        console.error("Error deleting the person:", error);
-      });
+        .delete(`http://localhost:3001/persons/${id}`)
+        .then((response) => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+
+        .catch((error) => {
+          console.error("Error deleting the person:", error);
+        });
     }
-    
-    
   };
 
   return (
