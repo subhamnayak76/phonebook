@@ -1,6 +1,6 @@
 # fullstack execersie
 
-added get ,post ,delete functionality to the phonebook
+```added get ,post ,delete functionality to the phonebook ```
 
 
 Currently, two official plugins are available:
